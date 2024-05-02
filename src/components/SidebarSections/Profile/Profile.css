@@ -82,7 +82,7 @@
 
 @media (max-width: 480px) {
     .profile-card {
-        top: 260px;  /* Further adjust top positioning for mobile */
+        top: 280px;  /* Further adjust top positioning for mobile */
         margin-left: 27.55%;  /* Further center the card */
         width: 355px;  /* Maximize width usage for small screens */
     }

@@ -63,7 +63,7 @@ li {
 @media (max-width: 480px) {
     .project-card {
         width: 58.5%; /* Maximize the card width for mobile devices */
-        top: -455px; /* Adjust the top position to reduce space */
+        top: -435px; /* Adjust the top position to reduce space */
         left: 40.5%; /* Ensure it's centered regardless of left in default */
         transform: translateX(-5%); /* Ensure horizontal centering */
         max-height: 280px;

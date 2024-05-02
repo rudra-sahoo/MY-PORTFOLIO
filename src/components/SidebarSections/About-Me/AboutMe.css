@@ -65,7 +65,7 @@
 
 @media (max-width: 768px) {
     .about-me-container {
-        margin-top: -120px;
+        margin-top: -130px;
         right: -8px;
         padding: 20px;
         height: auto; /* Ensures that the container sizes to content on small screens */

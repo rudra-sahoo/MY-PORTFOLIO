@@ -58,7 +58,7 @@
         width: 62%; /* Reduce width to fit the screen better */
         padding: 20px; /* Increase padding for better touch interaction */
         min-height: auto; /* Adjust height based on content */
-        margin-top: 4px; /* Adds a margin from the top */
+        margin-top: 6px; /* Adds a margin from the top */
     }
     .lets-work-together-card:hover {
         transform: translateX(-37.75%); /* Keep the card in its place, no scaling or movement */
