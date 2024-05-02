@@ -1,0 +1,82 @@
+.lets-work-together-container {
+    display: flex; /* Ensures the content is flexibly aligned */
+    justify-content: center; /* Center aligns the child horizontally */
+    align-items: center; /* Center aligns the child vertically */
+    padding: 20px; /* Adds padding around the content */
+    margin: 20px 0; /* Adds vertical margin for separation from other elements */
+    width: 80.5%; /* Takes full width to enforce inner centering */
+    pointer-events: none;
+}
+
+.lets-work-together-card {
+    pointer-events: auto;
+    overflow: hidden;
+    background-color: #1C1E20; /* Dark background */
+    color: #fff; /* White text */
+    margin: 0;
+    padding: 10px; /* Spacing inside the card */
+    transform: translateY(123%);
+    left: 280px;
+    border-radius: 30px; /* Rounded corners for the card */
+    display: flex; /* Aligns the content */
+    align-items: flex-start; /* Aligns items to the top */
+    justify-content: space-between; /* Puts space between the text and the icon */
+    cursor: pointer; /* Changes the cursor to indicate this card is clickable */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transitions for hover effects */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Shadow for depth */
+    width: 615px; /* Width of the card */
+    position: relative; /* Needed for absolute positioning of the enter icon */
+    border: 5px solid #2c2c2c;
+    min-height: 120px;
+}
+
+.lets-work-together-card:hover {
+    transform: translateY(123%) scale(1.05); /* Slightly increase size on hover */
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.3); /* Increase shadow size on hover */
+}
+
+.text-container {
+    text-align: left; /* Align text to the left */
+}
+
+.lets-work-together-card h3 {
+    font-size: 2.5rem; /* Increased size of the text */
+    line-height: 1; /* Adjust line spacing */
+    margin: 0; /* Remove default margin */
+    padding: 0; /* Remove default padding */
+    display: block; /* Ensures h3 takes up the full width for proper alignment */
+}
+
+.text-blue {
+    color: #007BFF; /* Blue color for the word "together" */
+}
+@media (max-width: 768px) {
+    .lets-work-together-card {
+        top: auto; /* Remove top positioning */
+        bottom: 55px; /* Adds a margin from the bottom of the viewport */
+        transform: translateX(-37.75%); /* Center horizontally */
+        width: 62%; /* Reduce width to fit the screen better */
+        padding: 20px; /* Increase padding for better touch interaction */
+        min-height: auto; /* Adjust height based on content */
+        margin-top: 4px; /* Adds a margin from the top */
+    }
+    .lets-work-together-card:hover {
+        transform: translateX(-37.75%); /* Keep the card in its place, no scaling or movement */
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Maintain the same shadow as in non-hover state */
+    }
+    .lets-work-together-card h3 {
+        font-size: 2rem; /* Slightly reduce font size for better space management */
+    }
+    .lets-work-together-container {
+        display: flex; /* Ensures the content is flexibly aligned */
+        justify-content: center; /* Center aligns the child horizontally */
+        align-items: center; /* Center aligns the child vertically */
+        padding: 20px; /* Adds padding around the content */
+        margin: 20px 0; /* Adds vertical margin for separation from other elements */
+        width: 80.5%; /* Takes full width to enforce inner centering */
+        pointer-events: none;
+        transform: translateY(792%);
+    }
+}
+
+

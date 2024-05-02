@@ -1,0 +1,53 @@
+.titleContainer {
+  user-select: none;
+  position: absolute;
+  top: 60px;
+  left: 100px;
+  color: white;
+  z-index: 10;
+}
+
+.sidebarHeader {
+  margin: 0;
+  font-size: 4em;
+  color: rgb(96, 167, 96);
+  background: linear-gradient(90deg, rgba(0, 255, 0, 1), rgba(0, 0, 255, 1), rgba(75, 0, 130, 1), rgba(238, 130, 238, 1));
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: floatingColors 4s linear infinite;
+  background-size: 200% auto;
+}
+
+@keyframes floatingColors {
+  0%, 100% {
+    background-position: 0 0;
+  }
+  50% {
+    background-position: 100% 0;
+  }
+}
+@media (max-width: 768px) {
+  .titleContainer {
+    top: 30px; /* Adjust top position */
+    left: 50px; /* Adjust left position */
+    font-size: 0.8em; /* Adjust font size if needed */
+  }
+
+  .sidebarHeader {
+    font-size: 3em; /* Reduce font size */
+  }
+}
+
+/* For mobile devices (typically under 480px) */
+@media (max-width: 480px) {
+  .titleContainer {
+    top: 20px; /* Further adjust top position */
+    left: 20px; /* Further adjust left position */
+    font-size: 0.6em; /* Further adjust font size if needed */
+  }
+
+  .sidebarHeader {
+    font-size: 2em; /* Further reduce font size */
+  }
+}

@@ -1,0 +1,104 @@
+/* Profile.css */
+.profile-card {
+    pointer-events: auto;
+    overflow: hidden;
+    background-color: #1C1E20;
+    color: white;
+    padding:0;
+    margin: 0;
+    top: -265px;
+    left: 1190px;
+    border-radius: 30px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    position: relative;
+    width: 250px; /* Increased width */
+    max-width: 90%; /* Optional to ensure it doesn't overflow on smaller screens */
+    text-align: center;
+    height: 380px; /* Adjust height automatically based on content */
+    border: 5px solid #2c2c2c;
+}
+
+.profile-card-header {
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+.social-media-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.social-row {
+    display: flex;
+    justify-content: center;
+    margin-bottom:20px; /* This can be adjusted if more or less space is needed */
+}
+
+.social-icon-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 80px;  /* Circle diameter */
+    height: 80px;  /* Circle diameter */
+    border-radius: 50%;  /* Makes the background circle */
+    background: white;  /* Circle color */
+    color: #1C1E20;  /* Icon color */
+    margin: 10px;  /* Spacing between icons */
+    transition: background-color 0.3s, color 0.3s;  /* Smooth transition for color and background */
+}
+
+.social-icon {
+    font-size: 2em;  /* Icon size */
+    color: inherit;  /* Inherits color from the container */
+}
+
+.social-icon-container:hover {
+    background-color: #007bff;  /* Blue background on hover */
+    color: white;  /* White icon on hover */
+}
+@media (max-width: 768px) {
+    .profile-card {
+        top: 150px;  /* Adjust top positioning on tablets */
+        left: 10%;  /* Center the card horizontally */
+        width: 80%;  /* Adjust width to better fit the device */
+    }
+
+    .profile-card-header {
+        font-size: 1.5rem;  /* Reduce font size to fit smaller screens */
+        margin-bottom: 15px;  /* Adjust spacing to maintain layout */
+    }
+
+    .social-icon-container {
+        width: 60px;  /* Reduce the size of the icon containers */
+        height: 60px;  /* Maintain aspect ratio */
+        margin: 8px;  /* Adjust spacing between icons */
+    }
+
+    .social-icon {
+        font-size: 1.5em;  /* Adjust icon size for readability */
+    }
+}
+
+@media (max-width: 480px) {
+    .profile-card {
+        top: 260px;  /* Further adjust top positioning for mobile */
+        margin-left: 27.55%;  /* Further center the card */
+        width: 355px;  /* Maximize width usage for small screens */
+    }
+
+    .profile-card-header {
+        font-size: 1.2rem;  /* Further reduce font size for mobile screens */
+        margin-bottom: 10px;  /* Reduce spacing to optimize layout */
+    }
+
+    .social-icon-container {
+        width: 100px;  /* Further reduce the icon container size */
+        height: 100px;  /* Keep the circular shape */
+        margin: 15px;  /* Tighten spacing for compact layout */
+    }
+
+    .social-icon {
+        font-size: 2em;  /* Slightly reduce icon size for space efficiency */
+    }
+}

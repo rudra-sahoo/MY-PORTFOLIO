@@ -1,0 +1,103 @@
+body, html {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+.projectsContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centers items horizontally in the container */
+    justify-content: flex-start; /* Align items from the start */
+    min-height: 100vh; /* Use min-height to ensure it covers at least the viewport height */
+    padding-top: 50px; /* Reduced padding-top */
+    gap: 40px;
+    width: 100%; /* Full width */
+    margin-top: 150px; /* Space below the container */
+    padding-bottom: 50px; /* Additional padding at the bottom */
+    overflow: auto; /* Allows scrolling when content exceeds the container's height */
+}
+
+.content-wrap {
+    flex: 1 0 auto;  /* This ensures that the content section expands to fill available space */
+}
+
+.projectCard {
+    z-index: 1;
+    background-color: #1C1E20; /* Dark grey background */
+    border: 1px solid #2C2C2C; /* Slightly lighter grey border */
+    border-radius: 15px; /* Rounded corners */
+    width: 60%; /* Set the width to 80% of its parent container */
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Subtle shadow */
+    transition: transform 0.2s; /* Animation for hover effect */
+    color: #FFFFFF; /* White text color for better readability on dark background */
+}
+
+
+.projectCard:hover {
+    transform: scale(1.05); /* Slightly enlarge the card on hover */
+}
+
+.positionWrapper {
+    position: relative; /* This makes it the reference for its absolutely positioned children */
+    height: 100vh; /* Set the height to fill the viewport */
+    width: 100vw; /* Set the width to fill the viewport */
+}
+
+.projectHeader {
+    font-size: 24px; /* Larger text for the project name */
+    margin-bottom: 10px;
+}
+
+.projectDescription {
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.projectDate {
+    font-size: 14px;
+    margin-bottom: 20px; /* More space before the button */
+}
+
+.projectLink {
+    padding: 10px 20px;
+    background-color: #0056b3; /* Blue background for the button */
+    color: white;
+    text-decoration: none; /* Remove underline from links */
+    border-radius: 5px; /* Rounded corners for the button */
+    font-weight: bold;
+}
+
+.projectLink:hover {
+    background-color: #004494; /* Darker shade of blue on hover */
+}
+.languagesContainer {
+    margin-top: 5px;
+margin-bottom: 10px;
+}
+
+.languageTag {
+
+    display: inline-block;
+    background-color: #555;
+    color: #fff;
+    border-radius: 10px;
+    padding: 5px 10px;
+    margin-right: 5px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.languageTag svg {
+    margin-right: 5px;
+}
+.icon {
+    fill: white;
+    transition: fill 0.3s ease, transform 0.3s ease;
+}
+
+.languageTag:hover .icon {
+    fill: #007bff; /* Change this color to whatever shade of blue you like */
+    transform: scale(1.2);
+    pointer-events: auto;
+}

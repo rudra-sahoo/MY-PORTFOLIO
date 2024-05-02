@@ -1,0 +1,170 @@
+/*App.css*/
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%; /* Ensures the full height of the viewport is usable */
+  overflow-x: hidden;
+  overflow-y: auto; /* Allows vertical scrolling */
+}
+body, #root, .App { /* Assuming your main React div has id 'root' or class 'App' */
+  height: 100%;
+  overflow: hidden; /* Prevent any overflow at this level */
+}
+.App {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Ensures it covers at least the full height of the viewport */
+  width: 100%;
+  background: black;
+  overflow-x: hidden;
+  overflow-y: auto; /* Ensures scrolling is possible within the App */
+}
+
+.layout-after-loading {
+  display: flex; /* Align sidebar and main content side by side */
+  flex-direction: column;
+  min-height: 100vh;
+}
+.shutter {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: block;
+  background-color: black;
+  z-index: 10000;
+  overflow: hidden;
+  animation: slideShutter 5000ms forwards ease-out; /* Using ease-out for smoother ending */
+}
+
+.shutter::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 20px;
+  background-color: #333;
+  animation: barAppear 5000ms forwards ease-out; /* Consistent easing with the main shutter */
+}
+
+@keyframes slideShutter {
+  0% { height: 100%; }
+  90% { height: 20%; opacity: 1; } /* More gradual decrease in height */
+  100% { height: 0%; top: 100%; opacity: 0; } /* Finish smoothly and fade out */
+}
+
+@keyframes barAppear {
+  0% { transform: translateY(0%); }
+  90% { transform: translateY(80%); } /* Slow the bar's movement towards the end */
+  100% { transform: translateY(100%); }
+}
+.main-layout {
+  display: flex;         /* Enable flexbox */
+  flex-direction: column; /* Stack children vertically */
+  align-items: center;   /* Center-align children horizontally */
+  justify-content: start; /* Align children to the start of the flex container vertically */
+  gap: 10px;             /* Space between each component */
+}
+
+/* Base style for the lines */
+.line {
+  position: fixed;
+  width: 1px; /* Width of the line */
+  height: 100vh; /* Full height */
+  top: 0;
+  background: rgba(255, 255, 255, 0.2);  /* Color of the line */
+  z-index: 0; /* Behind the content */
+  overflow: hidden;
+}
+.horizontal-section {
+  display: flex;
+  align-items: flex-start; /* Ensure vertical alignment starts at the top of the container */
+  gap: 20px; /* Space between AboutMe and the vertical section */
+}
+
+.vertical-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Vertical space between Ticker and Project */
+}
+/* Ensuring the AboutMe and Ticker take up appropriate space */
+.about-me-container, .ticker-container {
+  flex: 1; /* Each takes equal width */
+}
+
+/* Additional responsive adjustments as needed */
+@media (max-width: 768px) {
+  .horizontal-section {
+      flex-direction: column;
+  }
+}
+/* Animation keyframes */
+@keyframes glow {
+  0%, 100% {
+    top: -50%; /* Starts from above the view */
+  }
+  50% {
+    top: 150%; /* Moves to below the view */
+  }
+}
+/* Add the animation to each line */
+.line::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  height: 300%; /* Increased height to allow complete top to bottom movement */
+  background: linear-gradient(
+          to bottom,
+          rgba(255, 255, 255, 0) 0%,
+          rgba(255, 255, 255, 0.8) 50%, /* The concentrated glowing area */
+          rgba(255, 255, 255, 0) 100%
+  );
+  animation: glow 5s ease-in-out infinite;
+}
+
+/* Apply the animation to each line */
+.line:nth-child(1)::before {
+  animation-delay: 0s; /* You can set different delays for each line for more randomness */
+}
+
+.line:nth-child(2)::before {
+  animation-delay: 1.25s;
+}
+
+.line:nth-child(3)::before {
+  animation-delay: 2.5s;
+}
+
+.line:nth-child(4)::before {
+  animation-delay: 3.75s;
+}
+.footer {
+
+  width: 100%;
+  text-align: center;
+  padding: 20px 0;
+  background-color: #1C1E20; /* Choose a suitable background */
+  color: white; /* Adjust text color as needed */
+  font-size: 16px;
+  box-shadow: 0 -2px 5px rgba(0,0,0,0.1); /* Optional: adds a shadow to the top of the footer */
+  z-index: 1;
+}
+@media (max-width: 768px) { /* Adjust this breakpoint as needed */
+  .footer{
+    width: 100%;
+    text-align: center;
+    padding: 20px 0;
+    margin-top: 550px;
+    background-color: #1C1E20; /* Choose a suitable background */
+    color: white; /* Adjust text color as needed */
+    font-size: 16px;
+    box-shadow: 0 -2px 5px rgba(0,0,0,0.1); /* Optional: adds a shadow to the top of the footer */
+    z-index: 1;
+    
+  }
+}

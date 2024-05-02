@@ -1,0 +1,129 @@
+.contact-container {
+    display: flex;
+    justify-content: space-between;
+    padding: 40px;
+    color: white;
+    background-color: #1c1c1c; /* Dark background */
+    width: 100%; /* Use percentage for responsiveness */
+    max-width: 1000px; /* Maximum width to control layout on large screens */
+    gap: 20px; /* Adjust gap for better spacing */
+    z-index: 1;
+    margin: 200px auto 0; /* Centered horizontally and top margin */
+    box-sizing: border-box; /* Includes padding in width calculation */
+}
+
+.contact-info, .contact-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.contact-info {
+    flex: 1 1 40%; /* Flexible basis with growth and shrink */
+}
+
+.contact-form {
+    flex: 1 1 60%; /* More space allocated to the form */
+}
+
+.info-section {
+    margin-bottom: 20px;
+}
+
+.email-section {
+    display: flex;
+    align-items: center;
+}
+
+.email-icon {
+    font-size: 1.5rem; /* Adjust icon size as needed */
+    margin-right: 10px;
+}
+
+.contact-form h2, .contact-info h2 {
+    margin-bottom: 30px; /* Reduced margin */
+}
+
+.contact-form form {
+    display: flex;
+    flex-direction: column;
+}
+
+.contact-form input,
+.contact-form textarea {
+    background: #2c2c2c; /* Slightly lighter than the container for contrast */
+    border: 1px solid #333; /* Subtle border */
+    margin-bottom: 1rem; /* Reduced margin for compact form */
+    padding: 1rem; /* Larger padding for better touch target size */
+    color: white;
+    border-radius: 0.4rem; /* Rounded corners */
+    outline: none; /* Removes default outline */
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+    border-color: #00FF00; /* Neon green focus */
+    box-shadow: 0 0 0 2px #00FF00; /* Outer glow for focus */
+}
+
+.contact-form button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #00FF00; /* Neon green */
+    color: #000; /* Text color */
+    padding: 0.8rem;
+    border-radius: 0.25rem;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out, background-color 0.2s ease;
+    width: 100%; /* Adjust if necessary */
+    height: auto; /* Adjust based on your content */
+}
+
+.contact-form button:hover,
+.contact-form button:focus {
+    background: #00dd00; /* Darker green on hover/focus */
+    transform: scale(1.05); /* Slight increase in size */
+}
+
+.response-message {
+    margin-top: 20px;
+    padding: 10px;
+    text-align: center;
+    color: white;
+    font-size: 16px;
+}
+
+.success {
+    background-color: #4CAF50; /* Green for success messages */
+}
+
+.error {
+    background-color: #f44336; /* Red for error messages */
+}
+.loading-svg {
+    width: 50px;
+    height: auto;
+    fill: currentColor;
+}
+.loading-icon {
+    align-self: center;
+    width: 30px;
+    height: 30px;
+    fill: currentColor; 
+}
+/* Media Queries for responsiveness */
+@media (max-width: 768px) {
+    .contact-container {
+        flex-direction: column;
+        padding: 20px;
+        margin-top: 100px;
+        width: 90%;
+    }
+
+    .contact-info, .contact-form {
+        flex: 1 1 100%;
+        margin-top: 20px;
+    }
+}

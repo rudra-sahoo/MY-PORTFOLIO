@@ -1,0 +1,65 @@
+/* Default CSS for laptop and desktop screens */
+.ticker-container {
+   transform: translateY(230px);
+    margin-left: auto; /* Center align the container */
+    margin-right: auto; /* Center align the container */
+    width: 55%; /* Adjust width as needed for larger screens */
+    overflow: hidden;
+    background-color: #1C1E20;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+    color: #fff;
+    padding: 12px 0;
+    border-radius: 30px;
+    font-family: 'Arial', sans-serif;
+    font-size: 18px;
+    z-index: 1;
+    border: 4px solid #2C2C2C;
+    position: relative;
+    left: -65px;
+}
+
+.ticker-content {
+    white-space: nowrap;
+    display: block;
+    position: relative;
+    animation: ticker 10s linear infinite;
+}
+
+@keyframes ticker {
+    0% {
+        transform: translateX(100%);
+    }
+    100% {
+        transform: translateX(-100%);
+    }
+}
+@media (max-width: 768px) {
+    .ticker-container {
+        width: 70%; /* Increased width for smaller tablet screens */
+        padding: 10px 0;
+        font-size: 16px;
+        transform: translateY(150px); /* Adjust vertical positioning for tablets */
+        border-radius: 20px;
+        left: 0; /* Center alignment adjustments */
+    }
+
+    .ticker-content {
+        animation: ticker 15s linear infinite; /* Slower animation on smaller screens */
+    }
+}
+
+/* Media query for mobile devices */
+@media (max-width: 480px) {
+    .ticker-container {
+        width: 70%; /* Further increased width for mobile screens */
+        padding: 8px 0;
+        font-size: 14px;
+        transform: translateY(-1080px); /* Further adjust vertical positioning for mobiles */
+        border-radius: 30px;
+        left: 0; /* Center alignment adjustments */
+    }
+
+    .ticker-content {
+        animation: ticker 20s linear infinite; /* Even slower animation for better readability */
+    }
+}

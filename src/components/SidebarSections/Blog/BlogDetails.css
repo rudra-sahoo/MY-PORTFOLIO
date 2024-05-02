@@ -1,0 +1,104 @@
+/* BlogDetails.css */
+
+.blog-details-container {
+    color: #fff;
+    background-color: #1C1E20; /* dark background */
+    padding: 20px;
+    margin: 200px auto;
+    max-width: 800px;
+    border-radius: 10px;
+}
+
+.content-section {
+    border-left: 5px solid #009688;
+    background-color: #2C2C2C; /* slightly lighter grey */
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+}
+
+.content-section h2 {
+    color: #E2E2E2; /* light grey */
+}
+
+.content-section p {
+    color: #CCC; /* lighter grey text for readability */
+}
+
+.author-signature {
+    text-align: right;  /* Align the author's signature to the right */
+    margin-top: 20px;   /* Space above the signature for separation */
+    padding: 10px;
+    font-family: 'Dancing Script', cursive; /* A fancy, cursive font to simulate a signature */
+    color: #E2E2E2; /* Light grey color for the signature */
+    font-size: 1.5rem; /* Slightly larger font for emphasis */
+}
+
+.comments-section {
+    background-color: #2C3E50; /* Slightly lighter than the container for contrast */
+    padding: 20px;
+    margin-top: 30px; /* Space from the blog content */
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+}
+
+.comments-section h2 {
+    color: #F39C12; /* Orange color for the headings to draw attention */
+}
+
+.comments-section textarea, .comments-section button {
+    width: 100%; /* Full width for ease of use */
+    padding: 10px;
+    margin-top: 10px; /* Spacing between elements */
+    border: none;
+    border-radius: 4px;
+}
+
+.comments-section button {
+    background-color: #16A085; /* Teal background for buttons */
+    color: white;
+    cursor: pointer; /* Cursor pointer to indicate clickable */
+}
+
+.comments-section button:hover {
+    background-color: #148F77; /* Darker teal on hover for button feedback */
+}
+@media (max-width: 768px) {
+    .blog-details-container {
+        margin: 100px auto; /* Reduce margin on smaller devices */
+        padding: 15px; /* Adjust padding for smaller screens */
+    }
+
+    .content-section {
+        padding: 10px; /* Reduce padding */
+    }
+
+    .author-signature {
+        font-size: 1.2rem; /* Adjust font size for smaller screens */
+    }
+
+    .comments-section {
+        padding: 15px; /* Slightly reduce padding */
+    }
+}
+
+@media (max-width: 480px) {
+    .blog-details-container {
+        margin: 120px auto; /* Further reduce margin for very small devices */
+        padding: 10px; /* Reduce padding further */
+        width: 90%;
+    }
+
+    .content-section {
+        border-left: 3px solid #009688; /* Thinner border for smaller screens */
+    }
+
+    .author-signature {
+        text-align: center; /* Center the signature to better fit narrow screens */
+        font-size: 1rem; /* Smaller font size */
+    }
+
+    .comments-section {
+        padding: 10px; /* Minimum padding */
+    }
+}

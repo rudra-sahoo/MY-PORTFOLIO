@@ -1,0 +1,81 @@
+
+.project-card {
+    pointer-events: auto;
+    overflow: hidden;
+    background-color: #1C1E20;
+    color: white;
+    padding:0;
+    margin: 0;
+    top: -673px;
+    left: 900px;
+    transition: transform 0.3s ease-in-out;
+    border-radius: 30px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    position: relative;
+    width: 250px; /* Increased width */
+    max-width: 90%; /* Optional to ensure it doesn't overflow on smaller screens */
+    text-align: left;
+    height: 380px; /* Adjust height automatically based on content */
+    border: 5px solid #2c2c2c;
+}
+.project-card:hover {
+    transform: scale(1.05); /* Slight scale up on hover to indicate interactivity */
+}
+
+
+.project-title {
+    font-size: 1.5rem; /* Larger font size for the title */
+    margin-bottom: 20px; /* Space below the title */
+    text-align: center; /* Center alignment for titles */
+}
+ul {
+    list-style: none; /* Remove default list styling */
+    padding: 0; /* Remove padding */
+}
+
+li {
+    padding: 10px 0; /* Spacing between list items */
+    border-bottom: 1px solid #333; /* Subtle separator */
+}
+
+.star-icon {
+    color: gold; /* Gold color for the star icon */
+    margin-right: 5px; /* Space between the star icon and text */
+}
+
+@media (max-width: 768px) {
+    .project-card {
+        left: 50%; /* Center the card horizontally */
+        transform: translateX(-50%); /* Correct horizontal centering */
+        width: 80%; /* Adjust width for tablet screens */
+        top: 50px; /* Adjust top position to be more sensible */
+    }
+
+    .project-title {
+        font-size: 1.2rem; /* Slightly reduce the font size */
+    }
+
+    ul li {
+        padding: 8px 0; /* Slightly reduce the padding between list items */
+    }
+}
+
+@media (max-width: 480px) {
+    .project-card {
+        width: 58.5%; /* Maximize the card width for mobile devices */
+        top: -455px; /* Adjust the top position to reduce space */
+        left: 40.5%; /* Ensure it's centered regardless of left in default */
+        transform: translateX(-5%); /* Ensure horizontal centering */
+        max-height: 280px;
+    }
+
+    .project-card:hover {
+        transform: translateX(-5%); /* Disable any transformation on hover */
+        /* Retain the same box-shadow or any other non-transform properties if needed */
+    }
+
+    .project-title {
+        font-size: 1rem; /* Further reduce the font size for small screens */
+        margin-bottom: 10px; /* Reduce space below the title */
+    }
+}

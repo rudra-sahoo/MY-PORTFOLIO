@@ -1,0 +1,67 @@
+/* src/components/Loading.css */
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: black;
+  overflow: hidden;  /* Hide anything outside the viewport */
+  position: fixed;  /* Ensure it covers the whole screen */
+  width: 100%;  /* Cover the full width */
+  top: 0;
+  left: 0;
+  z-index: 100;  /* Higher than anything else on the page */
+  user-select: none;
+}
+
+.loading-letter {
+  font-size: 2rem;
+  color: white;
+  font-weight: 700;
+  margin: 0 24px;  /* Increase space between letters for clear separation */
+  opacity: 0;  /* Start as invisible */
+  animation: glowingEffect 3s ease forwards;  /* Animation ends at the final visible state */
+  display: inline-block;
+  filter: blur(0px);  /* Start with no blur for clarity */
+}
+
+@keyframes glowingEffect {
+  0%, 100% {
+    opacity: 0;
+    filter: blur(0px);
+    color: transparent;
+  }
+  50% {
+    opacity: 1;
+    filter: blur(0px);
+    color: white;
+    text-shadow:
+      0 0 10px rgba(255, 255, 255, 0.8),
+      0 0 20px rgba(255, 0, 222, 0.7),
+      0 0 30px rgba(255, 255, 255, 0.6),
+      0 0 40px rgba(253, 253, 253, 0.5),
+      0 0 50px rgba(247, 245, 247, 0.4);
+  }
+}
+@media (max-width: 768px) {
+  .loading-letter {
+    font-size: 1.5rem;  /* Slightly reduce the font size for tablets */
+    margin: 0 12px;  /* Reduce the spacing between letters */
+    text-shadow:
+            0 0 7px rgba(255, 255, 255, 0.8),
+            0 0 14px rgba(255, 0, 222, 0.7),
+            0 0 21px rgba(255, 255, 255, 0.6);
+  }
+}
+
+/* Adjustments for mobile phones */
+@media (max-width: 480px) {
+  .loading-letter {
+    font-size: 1rem;  /* Further reduce font size for small mobile devices */
+    margin: 0 8px;  /* Further reduce the spacing to keep it aesthetically pleasing */
+    text-shadow:
+            0 0 5px rgba(255, 255, 255, 0.8),
+            0 0 10px rgba(255, 0, 222, 0.7),
+            0 0 15px rgba(255, 255, 255, 0.6);
+  }
+}

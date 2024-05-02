@@ -1,0 +1,98 @@
+/* Base styles for the blog container */
+.blog-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    width: 100%;  /* Full viewport width */
+    height: 100vh;  /* Full viewport height */
+    padding: 0;
+    margin: 0;
+    overflow: hidden;  /* Ensures no overflow */
+    cursor: pointer;
+    top: -600px;
+    pointer-events: none;  /* Disables pointer events on the container */
+}
+
+/* Base styles for the blog card */
+.blog-card {
+    pointer-events: auto;  /* Enables pointer events on the card itself */
+    background-color: #1C1E20;
+    color: #FFFFFF;
+    transition: transform 0.3s ease-in-out;
+    padding: 30px;
+    border: 8px solid #2C2C2C;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+    border-radius: 20px;
+    border: 5px solid #2c2c2c;
+    z-index: 10;
+    width: 500px;  /* Fixed width */
+    min-width: 500px;  /* Ensures the card does not shrink below 500px */
+}
+
+/* Hover effect for the blog card */
+.blog-card:hover {
+    transform: scale(1.05);  /* Scale effect on hover, centered using the original method */
+}
+
+/* Styles for the blog thumbnail image */
+.blog-thumbnail {
+    width: 400px;  /* Fixed width */
+    height: 300px;  /* Fixed height */
+    border-radius: 50px;
+    object-fit: cover;
+    user-select: none;
+    pointer-events: none;
+    margin-top: 20px;
+    display: block;
+    margin: 0 auto;  /* Center the thumbnail horizontally */
+}
+
+.profile-caption,
+.typing-text,
+.about-me-header {
+    text-align: center;
+}
+
+.cursor {
+    display: inline-block;
+    background-color: #FFFFFF;
+    margin-left: 5px;
+    width: 8px;
+    height: 1.5rem;
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    50% {
+        opacity: 0;
+    }
+}
+
+
+@media (max-width: 768px) {
+    .blog-container {
+        height: auto;  /* Remove the fixed height constraint */
+        overflow: visible;  /* Allows the blog card to be visible even if it extends outside the viewport */
+    }
+    .blog-card {
+        position: absolute;
+        top: 50%;  /* Vertically center in the original viewport height */
+        left: 50%;  /* Horizontally center */
+        transform: translate(-50%,148%);  /* Center the card exactly, adjusted for mobile */
+        width: 305px;
+        min-width: 318px;  /* Maintain fixed minimum width */
+        padding: 20px;
+        border-width: 2px;
+    }
+    .blog-card:hover {
+        transform: translate(-50%, 103%); /* Reset transform to non-hover state */
+        box-shadow: 0 4px 8px rgba(0,0,0,0.5);  /* Reset shadow to non-hover state */
+    }
+
+    .blog-thumbnail {
+        width: 100%; /* Full width of the card */
+        height: auto;  /* Height adjusts automatically */
+    }
+}
+

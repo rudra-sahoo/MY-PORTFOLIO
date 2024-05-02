@@ -1,0 +1,83 @@
+/* MoreAboutBlog.css */
+
+.more-about-blog {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 100vh;
+    padding-top: 50px;
+    gap: 40px;
+    width: 100%;
+    margin-top: 50px; /* Adjusted to better suit the blog page layout */
+    padding-bottom: 50px;
+    overflow: auto;
+}
+
+.blog-item {
+    background-color: #1C1E20; /* Dark grey background for contrast */
+    border: 5px solid #2C2C2C; /* Subtle border styling */
+    border-radius: 15px; /* Rounded corners for a smooth look */
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.5); /* Soft shadow for depth */
+    width: 60%; /* Responsive width for better readability */
+    transition: transform 0.3s ease-in-out; /* Smooth transformation on hover */
+    display: flex; /* Ensures content is flexibly arranged */
+    flex-direction: column; /* Stacks items vertically */
+    align-items: center; /* Centers items horizontally */
+}
+
+.blog-item:hover {
+    transform: scale(1.05); /* Slight increase in size on hover for emphasis */
+}
+
+.blog-item img {
+    width: 80%; /* Large enough to be engaging */
+    max-width: 500px; /* Limiting maximum width */
+    height: auto;
+    margin-bottom: 20px; /* Space between image and text */
+    align-self: center; /* Ensure the image is centered within the flex container */
+}
+
+.blog-item h2 {
+    color: #E2E2E2; /* Light grey for visibility against dark background */
+    text-align: center; /* Central alignment for titles */
+}
+
+.blog-content {
+    width: 100%; /* Ensures content uses full card width */
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #CCC; /* Lighter grey for readable text */
+    margin-top: 20px; /* Space above the content */
+}
+
+.input, .textarea, input[type="text"], input[type="file"], textarea {
+    width: 100%;
+    padding: 8px;
+    margin-top: 10px;
+    box-sizing: border-box;
+    border: 1px solid #333;
+    background-color: #222;
+    color: #fff;
+}
+
+button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+.error {
+    color: #ff6666;
+    margin: 20px 0;
+}
+
