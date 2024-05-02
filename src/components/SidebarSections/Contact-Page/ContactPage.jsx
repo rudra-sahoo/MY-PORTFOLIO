@@ -50,7 +50,7 @@ const ContactForm = () => {
         e.preventDefault();
         setIsLoading(true);
         try {
-            const response = await fetch(`${process.env.REACT_APP_BACKEND_API_URL}api/send-email`, {
+            const response = await fetch(`${process.env.REACT_APP_BACKEND_API_URL}/api/send-email`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

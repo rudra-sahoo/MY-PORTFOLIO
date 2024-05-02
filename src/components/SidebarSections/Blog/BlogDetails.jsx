@@ -29,7 +29,7 @@ const BlogDetails = () => {
         const fetchBlogDetails = async () => {
             setLoading(true);
             try {
-                const response = await axios.get(`${apiUrl}api/blog/${id}`);
+                const response = await axios.get(`${apiUrl}/api/blog/${id}`);
                 if (response.data.success) {
                     setBlog(response.data.data);
                     fetchComments();
@@ -45,7 +45,7 @@ const BlogDetails = () => {
 
         const fetchComments = async () => {
             try {
-                const commentsResponse = await axios.get(`${apiUrl}api/comments/${id}`);
+                const commentsResponse = await axios.get(`${apiUrl}/api/comments/${id}`);
                 if (commentsResponse.data.success) {
                     setComments(commentsResponse.data.comments);
                 }
@@ -68,7 +68,7 @@ const BlogDetails = () => {
                 userName: user.displayName,
                 parentId
             };
-            const response = await axios.post(`${apiUrl}api/comments`, postData);
+            const response = await axios.post(`${apiUrl}/api/comments`, postData);
             if (response.data.success) {
                 setComments([...comments, response.data.comment]);
                 setCommentText('');

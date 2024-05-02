@@ -15,7 +15,7 @@ const MoreAboutProject = () => {
     const [error, setError] = useState(null);
 /** hello*/
     useEffect(() => {
-        fetch(`http://localhost:3001/api/projects`)
+        fetch(`${process.env.REACT_APP_BACKEND_API_URL}/api/projects`)
             .then(response => {
                 if (!response.ok) throw new Error(`HTTP status ${response.status}`);
                 return response.json();

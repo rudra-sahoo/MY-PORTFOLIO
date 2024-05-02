@@ -13,7 +13,7 @@ const Blog = () => {
     useEffect(() => {
         const fetchLatestBlog = async () => {
             try {
-                const response = await axios.get(`${apiUrl}api/latest-blog`);
+                const response = await axios.get(`${apiUrl}/api/latest-blog`);
                 if (response.data && response.data.success && response.data.data) {
                     setLatestBlog(response.data.data);
                 } else {

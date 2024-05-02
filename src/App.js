@@ -80,7 +80,7 @@ const App = () => {
                             } />
                             <Route path="/contact" element={<ContactPage />} />
                             <Route path="/Aboutme" element={<MoreAboutMe />} />
-                            <Route path="/more-about-project" element={<MoreAboutProject />} />
+                            <Route path="/project" element={<MoreAboutProject />} />
                             <Route path="/blogs" element={<MoreAboutBlog />} />
                             <Route path="/blogs/:id" element={<BlogDetails />} />
                         </Routes>

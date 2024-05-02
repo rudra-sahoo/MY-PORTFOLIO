@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './Project.css'; // Make sure your CSS file path is correct
+import './Project.css'; 
 
 const Project = () => {
     const navigate = useNavigate();
@@ -11,7 +11,7 @@ const Project = () => {
     useEffect(() => {
         const fetchProjects = async () => {
             try {
-                const response = await fetch(`http://localhost:3001/api/projects`);
+                const response = await fetch(`${process.env.REACT_APP_BACKEND_API_URL}/api/projects`);
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }
@@ -29,7 +29,7 @@ const Project = () => {
     }, []);
 
     const handleCardClick = () => {
-        navigate('/more-about-project');
+        navigate('/project');
     };
 
     if (isLoading) return <div className="project-container">Loading...</div>;
@@ -48,7 +48,7 @@ const Project = () => {
                         ))}
                     </ul>
                 ) : (
-                    <p>No projects found.</p> // Adjusted for better semantics
+                    <p>No projects found.</p> 
                 )}
             </div>
         </div>

@@ -1,12 +1,16 @@
 # Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+RUN npm install INSTALL ALL DEPENDANCIES THE PORTFOLIO REQUIRED
 
 ## Available Scripts
 
-In the project directory, you can run:
+IN THE PROJECT DIRECETORY YOU CAN RUN THE FOLLOWING COMMAND TO INITIATE THE PROJECT FRONTEND.
 
 ### `npm start`
+
+IN THE PROJECT DIRECTORY YOU CAN RUN THE FOLLOWING COMMAND TO INITIATE THE PROJECT BACKEND.
+
+### `node server.js`
 
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
@@ -14,10 +18,7 @@ Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 The page will reload when you make changes.\
 You may also see any lint errors in the console.
 
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### NOTE THE PORTOFOLIO WILL FULLY FUNCTIONAL WHEN YOU RUN ITS BACKEND
 
 ### `npm run build`
 
@@ -27,44 +28,27 @@ It correctly bundles React in production mode and optimizes the build for the be
 The build is minified and the filenames include the hashes.\
 Your app is ready to be deployed!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### NOTE BEFORE RUNNING THE FRONTEND AND BACKEND MAKE SURE YOU CREATE .env FILE IN THE PROJECT ROOT DIRECTORY
+PLACE THESE VALUES INSIDE THE .ENV
 
-### `npm run eject`
+#GITHUB_TOKEN=GITHUB_TOKEN
+#MONGODB_URI=MONGODB_URL
+#FRONTEND_ORIGIN=FORNTEND_URL
+#EMAIL_USERNAME=YOUR_EMAIL_FOR_WHICH_YOU_HAVE_GENERATED_THE_PASSWORD
+#EMAIL_PASSWORD=GENERATE_APP_PASSWORD_FROM_GOOGLE
+#SESSION_SECRET=YOU_CAN_PUT_ANYTHING
+#B_PORT=3001
+#PORT=3000
+#REACT_APP_BACKEND_API_URL=LINK TO YOU BACKEND
+#REACT_APP_FIREBASE_API_KEY=GET_FROM_FIREBASE
+#REACT_APP_FIREBASE_AUTH_DOMAIN=GET_FROM_FIREBASE
+#REACT_APP_FIREBASE_PROJECT_ID=GET_FROM_FIREBASE
+#REACT_APP_FIREBASE_STORAGE_BUCKET=GET_FROM_FIREBASE
+#REACT_APP_FIREBASE_MESSAGE_SENDER_ID=GET_FROM_FIREBASE
+#REACT_APP_FIREBASE_APP_ID=GET_FROM_FIREBASE
+#REACT_APP_FIREBASE_MEASUREMENT_ID=GET_FROM_FIREBASE
+#REACT_APP_MASTER_EMAIL=YOU_EMAIL_TO_MANAGE_PORTFOLIO
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)

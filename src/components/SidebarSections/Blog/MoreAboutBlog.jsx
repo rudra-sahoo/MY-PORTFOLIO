@@ -43,7 +43,7 @@ const MoreAboutBlog = () => {
     const fetchBlogs = async () => {
         setLoading(true);
         try {
-            const response = await axios.get(`${apiUrl}api/blogs`);
+            const response = await axios.get(`${apiUrl}/api/blogs`);
             if (response.data && Array.isArray(response.data.data)) {
                 setBlogs(response.data.data);
                 setError(null);
@@ -88,7 +88,7 @@ const MoreAboutBlog = () => {
         setDeletingId(id);
     
         try {
-            const response = await axios.delete(`${apiUrl}api/blog/${id}`);
+            const response = await axios.delete(`${apiUrl}/api/blog/${id}`);
             if (response.data.success) {
                 const updatedBlogs = blogs.filter(blog => blog.id !== id);
                 setBlogs(updatedBlogs);
@@ -130,7 +130,7 @@ const MoreAboutBlog = () => {
     
         setSubmittingBlog(true);  // Start submitting, show loading icon
         try {
-            const response = await axios.post(`${apiUrl}api/blog`, formData, {
+            const response = await axios.post(`${apiUrl}/api/blog`, formData, {
                 headers: { 'Content-Type': 'multipart/form-data' }
             });
             if (response.data && response.data.success) {
