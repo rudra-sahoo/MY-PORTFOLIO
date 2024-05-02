@@ -103,33 +103,6 @@ app.use(session({
 }));
 app.use(express.json());
 // Function to fetch languages from GitHub API
-async function updateProjects() {
-    console.log('Updating projects...');
-    try {
-        const response = await fetch('https://api.github.com/users/rudra-sahoo/repos?sort=created', {
-            headers: { 'Authorization': `Bearer ${process.env.GITHUB_TOKEN}` }
-        });
-        const data = await response.json();
-
-        await Promise.all(data.map(async project => {
-            const languages = await fetchLanguages(project.html_url);
-            await Project.findOneAndUpdate(
-                { githubUrl: project.html_url },
-                {
-                    name: project.name,
-                    description: project.description || 'No description',
-                    githubUrl: project.html_url,
-                    createdAt: new Date(project.created_at),
-                    languages
-                },
-                { upsert: true, new: true }
-            );
-        }));
-        console.log('Projects updated successfully.');
-    } catch (error) {
-        console.error('Failed to fetch and update projects from GitHub:', error);
-    }
-}
 async function fetchLanguages(githubUrl) {
     const apiUrl = `https://api.github.com/repos/${githubUrl.split('github.com/')[1]}/languages`;
     const response = await fetch(apiUrl, {
@@ -452,8 +425,6 @@ app.post('/api/store-google-user', async (req, res) => {
         res.status(500).json({ success: false, message: 'Failed to save user' });
     }
 });
-updateProjects();
-
 const port = process.env.B_PORT || 3001;
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
