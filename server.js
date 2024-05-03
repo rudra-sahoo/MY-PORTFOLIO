@@ -425,6 +425,9 @@ app.post('/api/store-google-user', async (req, res) => {
         res.status(500).json({ success: false, message: 'Failed to save user' });
     }
 });
+app.get('/', (req, res) => {
+    res.send('Welcome to my server!');
+});
 const port = process.env.B_PORT || 3001;
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);

@@ -79,7 +79,7 @@
         position: absolute;
         top: 50%;  /* Vertically center in the original viewport height */
         left: 50%;  /* Horizontally center */
-        transform: translate(-50%,153.5%);  /* Center the card exactly, adjusted for mobile */
+        transform: translate(-50%,107%);  /* Center the card exactly, adjusted for mobile */
         width: 305px;
         min-width: 318px;  /* Maintain fixed minimum width */
         padding: 20px;

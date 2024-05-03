@@ -75,7 +75,7 @@
         margin: 20px 0; /* Adds vertical margin for separation from other elements */
         width: 80.5%; /* Takes full width to enforce inner centering */
         pointer-events: none;
-        transform: translateY(792%);
+        transform: translateY(888%);
     }
 }
 
