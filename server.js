@@ -93,33 +93,6 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
 }));
-// Middleware to log access details and fetch location data using IPinfo
-app.use(async (req, res, next) => {
-    const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress.split(",")[0].trim();
-    const referrer = req.get('Referrer') || 'No referrer';
-    const token = process.env.REACT_APP_IPINFO_TOKEN; // Use your IPinfo API token from environment variables
-
-    console.log(`Access from IP: ${ip}, Referrer: ${referrer}`);
-
-    // Construct the URL to fetch data from IPinfo
-    const url = `https://ipinfo.io/${ip}/json?token=${token}`;
-
-    try {
-        const response = await fetch(url);
-        const data = await response.json();
-
-        // Log the location data
-        console.log(`Visitor IP: ${ip}, Location: ${data.city}, ${data.region}, ${data.country}`);
-
-        // Optionally attach the location data to the request object if needed later in request processing
-        req.locationData = data;
-    } catch (error) {
-        console.error('Failed to fetch location data:', error);
-    }
-
-    next();
-});
-
 app.use(bodyParser.json());
 app.use(morgan('dev'));  // Logging HTTP requests
 app.use(session({
