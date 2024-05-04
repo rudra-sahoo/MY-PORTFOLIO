@@ -7,7 +7,7 @@ import { CSVLink } from 'react-csv';  // Using react-csv for CSV download functi
 import animationVideo from '../../../Resources/Error_Animation.webm'; // Make sure path is correct
 
 const AUTHORIZED_EMAIL = process.env.REACT_APP_MASTER_EMAIL;
-const SECRET_KEYWORD = 'mummy';  // This should be secure and stored appropriately
+const SECRET_KEYWORD = process.env.REACT_APP_SECRET_KEYWORD;  // This should be secure and stored appropriately
 const apiUrl = process.env.REACT_APP_BACKEND_API_URL;
 
 const ErrorFallback = ({ error, resetErrorBoundary }) => (
