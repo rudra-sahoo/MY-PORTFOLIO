@@ -24,7 +24,7 @@ const accessLogStream = rfs.createStream('access.log', {
   });
 const io = new Server(server, {
     cors: {
-        origin: "http://localhost:3000", // Allow your front-end origin
+        origin: process.env.FRONTEND_ORIGIN, // Allow your front-end origin
         methods: ["GET", "POST"], // Allowed request methods
         allowedHeaders: ["Content-Type"], // Allowed headers
         credentials: true // Allow credentials
@@ -113,41 +113,51 @@ const storage = multer.diskStorage({
     }
 });
 const upload = multer({ storage: storage });
-const ipInfoMiddleware = async (req, res, next) => {
+
+
+function customLogger(message) {
+    const logFilePath = path.join(__dirname, 'log', 'access.log');
+    const logMessage = `${new Date().toISOString()} - ${message}\n`;
+    fs.appendFile(logFilePath, logMessage, err => {
+      if (err) {
+        console.error('Error writing to log file:', err);
+      }
+    });
+  }
+
+  const ipInfoMiddleware = async (req, res, next) => {
     // Check if the IP information is already stored in the session
     if (!req.session.ipInfo) {
-        const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress.split(",")[0];
+        // Extract IP address from request headers or connection info
+        const ip = (req.headers['x-forwarded-for'] || req.connection.remoteAddress).split(",")[0].trim();
         try {
-            const response = await axios.get(`https://ipinfo.io/${ip}/json?token=${process.env.IPINFO_TOKEN}`);
+            // Construct API URL with the IP address
+            const url = `https://ipinfo.io/${ip}/json?token=${process.env.IPINFO_TOKEN}`;
+            // Fetch IP information from ipinfo.io
+            const response = await axios.get(url);
+            // Store the fetched IP information in the session
             req.session.ipInfo = response.data;
 
-            // Prepare detailed log information
-            const detailedLogInfo = {
-                ip: ip,
-                city: response.data.city,
-                region: response.data.region,
-                country: response.data.country,
-                org: response.data.org, // ISP details
-                postal: response.data.postal,
-                locationLink: `https://www.google.com/maps/?q=${response.data.loc}` // Google Maps link
-            };
-
-            // Log the IP information to the console
-            console.log(`IP: ${ip}, Location: ${detailedLogInfo.city}, ${detailedLogInfo.region}, ${detailedLogInfo.country}, ISP: ${detailedLogInfo.org}, Postal Code: ${detailedLogInfo.postal}, Map: ${detailedLogInfo.locationLink}`);
-
-            // Emit the log entry via socket here
+            // Format a detailed log message with the IP information
+            const detailedLogInfo = `IP: ${ip}, Location: ${response.data.city}, ${response.data.region}, ${response.data.country}, ISP: ${response.data.org}, Postal Code: ${response.data.postal}, Map: https://www.google.com/maps/?q=${response.data.loc}`;
+            // Log the detailed information using a custom logger function
+            customLogger(detailedLogInfo);
+            // Emit the log information over a socket connection
             io.emit('httpLog', detailedLogInfo);
         } catch (error) {
-            console.error('Error fetching IP information:', error);
+            // Log any error encountered during the fetch operation
+            customLogger(`Error fetching IP information: ${error}`);
         }
     } else {
-        console.log(`Session already has IP info for IP: ${req.session.ipInfo.ip}`);
+        // If the session already contains IP information, log this fact (can be removed if not needed)
+        customLogger(`Session already has IP info for IP: ${req.session.ipInfo.ip}`);
     }
-    next();
+    next();  // Proceed to the next middleware function or route handler
 };
+
 app.use(express.static('public'));  // Assuming your favicon.ico is in the 'public' directory
 app.use(cors({
-    origin: 'http://localhost:3000', // Specify the client origin explicitly
+    origin: process.env.FRONTEND_ORIGIN, // Specify the client origin explicitly
     methods: ['GET', 'POST', 'DELETE'], // Allowed methods
     allowedHeaders: ['Content-Type', 'Authorization'], // Explicitly allowed headers
     credentials: true // Allow cookies/token to be sent with requests
