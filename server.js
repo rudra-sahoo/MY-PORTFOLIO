@@ -125,9 +125,15 @@ function customLogger(message) {
     });
   }
 
-  const ipInfoMiddleware = async (req, res, next) => {
+  // Shared variable to track IP information fetching status
+let isFetchingIPInfo = false;
+
+const ipInfoMiddleware = async (req, res, next) => {
     // Check if the IP information is already stored in the session
-    if (!req.session.ipInfo) {
+    if (!req.session.ipInfo && !isFetchingIPInfo) {
+        // Set flag to indicate that IP information is being fetched
+        isFetchingIPInfo = true;
+
         // Extract IP address from request headers or connection info
         const ip = (req.headers['x-forwarded-for'] || req.connection.remoteAddress).split(",")[0].trim();
         try {
@@ -147,10 +153,20 @@ function customLogger(message) {
         } catch (error) {
             // Log any error encountered during the fetch operation
             customLogger(`Error fetching IP information: ${error}`);
+        } finally {
+            // Reset the fetching flag after IP information is fetched
+            isFetchingIPInfo = false;
         }
-    } else {
-        // If the session already contains IP information, log this fact (can be removed if not needed)
-        customLogger(`Session already has IP info for IP: ${req.session.ipInfo.ip}`);
+    } else if (isFetchingIPInfo) {
+        // If another request is already fetching IP information, wait for it to finish
+        await new Promise(resolve => {
+            const interval = setInterval(() => {
+                if (!isFetchingIPInfo) {
+                    clearInterval(interval);
+                    resolve();
+                }
+            }, 100);
+        });
     }
     next();  // Proceed to the next middleware function or route handler
 };

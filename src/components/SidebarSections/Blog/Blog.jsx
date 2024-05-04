@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './Blog.css';
@@ -8,27 +8,33 @@ const Blog = () => {
     const [latestBlog, setLatestBlog] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const apiUrl = process.env.REACT_APP_BACKEND_API_URL;
+    const hasFetched = useRef(false);  // useRef to track fetch status
 
     useEffect(() => {
-        const fetchLatestBlog = async () => {
-            try {
-                const response = await axios.get(`${apiUrl}/api/latest-blog`);
-                if (response.data && response.data.success && response.data.data) {
-                    setLatestBlog(response.data.data);
-                } else {
-                    throw new Error('No latest blog post found');
+        // Check if the data has already been fetched
+        if (!hasFetched.current) {
+            hasFetched.current = true;  // Set this to true to prevent future fetches
+            console.log("component mounted and fetching data.");
+            const fetchLatestBlog = async () => {
+                try {
+                    const apiUrl = process.env.REACT_APP_BACKEND_API_URL;
+                    const response = await axios.get(`${apiUrl}/api/latest-blog`);
+                    if (response.data && response.data.success && response.data.data) {
+                        setLatestBlog(response.data.data);
+                    } else {
+                        throw new Error('No latest blog post found');
+                    }
+                } catch (error) {
+                    console.error('Error fetching latest blog:', error);
+                    setError(error.response?.data?.message || error.message || 'Unable to load blog');
+                } finally {
+                    setLoading(false);
                 }
-            } catch (error) {
-                console.error('Error fetching latest blog:', error);
-                setError(error.response?.data?.message || error.message || 'Unable to load blog');
-            } finally {
-                setLoading(false);
-            }
-        };
+            };
 
-        fetchLatestBlog();
-    }, [apiUrl]);
+            fetchLatestBlog();
+        }
+    }, []);  // Empty dependency array ensures this runs only once on component mount
 
     const handleClick = () => {
         navigate('/blogs');

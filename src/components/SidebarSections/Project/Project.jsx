@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Project.css'; 
 
@@ -7,25 +7,31 @@ const Project = () => {
     const [projects, setProjects] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
+    const hasFetched = useRef(false);  // Using useRef to track the fetch status across re-renders
 
     useEffect(() => {
-        const fetchProjects = async () => {
-            try {
-                const response = await fetch(`${process.env.REACT_APP_BACKEND_API_URL}/api/projects`);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
+        // Only perform the fetch if it has not been done yet
+        if (!hasFetched.current) {
+            hasFetched.current = true;  // Set this to true to prevent future fetches
+            console.log('Project component mounted and fetching data.')
+            const fetchProjects = async () => {
+                try {
+                    const response = await fetch(`${process.env.REACT_APP_BACKEND_API_URL}/api/projects`);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    const data = await response.json();
+                    setProjects(data);
+                } catch (err) {
+                    console.error('Error fetching projects:', err);
+                    setError(err.message);
+                } finally {
+                    setIsLoading(false);
                 }
-                const data = await response.json();
-                setProjects(data);
-                setIsLoading(false);
-            } catch (err) {
-                console.error('Error fetching projects:', err);
-                setError(err.message);
-                setIsLoading(false);
-            }
-        };
+            };
 
-        fetchProjects();
+            fetchProjects();
+        }
     }, []);
 
     const handleCardClick = () => {
@@ -48,7 +54,7 @@ const Project = () => {
                         ))}
                     </ul>
                 ) : (
-                    <p>No projects found.</p> 
+                    <p>No projects found.</p>
                 )}
             </div>
         </div>
