@@ -1,0 +1,93 @@
+/* Logs.css */
+.logs-container {
+    color: #ffffff;
+    background-color: #1C1E20; /* Dark grey background */
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 600px;
+    margin: 20px auto;
+}
+
+.log {
+    background-color: #333333; /* Slightly lighter grey */
+    padding: 10px;
+    margin-bottom: 8px;
+    border-radius: 4px;
+    animation: fadeIn 0.5s ease-out;
+}
+
+.log-code {
+    font-weight: bold;
+    color: #4CAF50; /* Green color to highlight status code */
+}
+
+button {
+    background-color: #4CAF50; /* Green button */
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+.popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.popup-content {
+    background: #1C1E20;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    color: white;
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    border: none;
+    background: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+}
+.popup-content p{
+    font-size: 5rem;
+}
+.log-filter-input, .filter-btn {
+    margin: 10px;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+.filter-btn {
+    background-color: #f0f0f0;
+    cursor: pointer;
+}
+
+.filter-btn:hover {
+    background-color: #e0e0e0;
+}

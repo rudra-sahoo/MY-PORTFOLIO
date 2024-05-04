@@ -13,7 +13,7 @@ import BlogDetails from './components/SidebarSections/Blog/BlogDetails';
 import MoreAboutProject from './components/SidebarSections/Project/MoreAboutProject';
 import ContactPage from './components/SidebarSections/Contact-Page/ContactPage';
 import Profile from './components/SidebarSections/Profile/Profile';
-import Logs from './components/SidebarSections/LOGS/logs'; 
+import Logs from './components/SidebarSections/logs-page/logs'; 
 import './App.css';
 
 const AppWrapper = () => {

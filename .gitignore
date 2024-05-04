@@ -13,6 +13,7 @@ dist/
 .env.test.local
 .env.production.local
 
+.Log/access.log
 # Debug logs
 npm-debug.log*
 yarn-debug.log*
