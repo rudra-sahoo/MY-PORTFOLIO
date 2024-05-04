@@ -40,16 +40,19 @@ button:hover {
     to { opacity: 1; }
 }
 .popup {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(0, 0, 0, 0.8);
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    position: fixed; /* or 'absolute' if you want it to move with the page scroll */
+    top: 10%; /* move closer to the top of the screen */
+    left: 50%; /* center horizontally */
+    transform: translate(-50%, -10%); /* adjust horizontal centering and move up slightly */
+    z-index: 1000; /* make sure it's above other content */
+    width: 90%; /* optional: adjust width */
+    max-width: 500px; /* optional: limit maximum width */
+    padding: 20px; /* optional: add padding inside the popup */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* optional: add shadow for better visibility */
+     /* optional: change background color */
+    border-radius: 8px; /* optional: round corners */
 }
+
 
 .popup-content {
     background: #1C1E20;

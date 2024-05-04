@@ -31,12 +31,17 @@ const App = () => {
 
     useEffect(() => {
         const handleRouteChange = () => {
-            setShutterOpen(true);
-            setTimeout(() => setShutterOpen(false), 5000); // Corresponds to animation time
+            // Check if the current route is related to the blog
+            if (location.pathname.startsWith('/blogs')) {
+                setShutterOpen(false); // Ensure shutter is closed and not animated for blog routes
+            } else {
+                setShutterOpen(true); // Trigger the shutter animation for all other routes
+                setTimeout(() => setShutterOpen(false), 5000); // Close the shutter after the animation duration
+            }
         };
-
+    
         handleRouteChange(); // Call on initial load and route changes
-        return () => setShutterOpen(false); // Clean up
+        return () => setShutterOpen(false); // Clean up by ensuring the shutter is closed when the component unmounts
     }, [location]);
 
     useEffect(() => {

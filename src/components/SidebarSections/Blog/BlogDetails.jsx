@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import './BlogDetails.css';
 import { auth, GoogleAuthProvider, signInWithPopup } from './firebase-config';
+import LoadingVideo from '../../../Resources/Loading_Animation.webm';  // Adjust the path as necessary
 
 const BlogDetails = () => {
     const { id } = useParams();
@@ -13,6 +14,8 @@ const BlogDetails = () => {
     const [error, setError] = useState('');
     const [user, setUser] = useState(null);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [videoFinished, setVideoFinished] = useState(false);
+
     const apiUrl = process.env.REACT_APP_BACKEND_API_URL;
 
     useEffect(() => {
@@ -88,7 +91,22 @@ const BlogDetails = () => {
         }
     };
 
-    if (loading) return <div>Loading...</div>;
+    if (loading || !videoFinished) {
+        return (
+            <div className="loading-container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', backgroundColor: 'rgba(0,0,0,0.8)' }}>
+                <video 
+                    autoPlay 
+                    loop={false}  // Prevent looping to ensure video plays only once
+                    muted 
+                    width="40%"
+                    onEnded={() => setVideoFinished(true)}
+                >
+                    <source src={LoadingVideo} type="video/webm" />
+                </video>
+            </div>
+        );
+    }
+    
     if (error) return <div>Error: {error}</div>;
 
     return (

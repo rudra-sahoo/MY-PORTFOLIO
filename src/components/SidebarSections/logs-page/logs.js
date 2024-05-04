@@ -1,9 +1,15 @@
 import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import { auth, GoogleAuthProvider, signInWithPopup, signOut } from '../Blog/firebase-config';
 import { ErrorBoundary } from 'react-error-boundary';
-import { useSocket } from './useSocket';
-import axios from 'axios';
 import './Logs.css';
+import { CSVLink } from 'react-csv';  // Using react-csv for CSV download functionality
+import MapVisualization from './MapVisualization'; // Ensure this component is properly set up for displaying logs on a map
+import animationVideo from '../../../Resources/Error_Animation.webm'; // Make sure path is correct
+
+const AUTHORIZED_EMAIL = process.env.REACT_APP_MASTER_EMAIL;
+const SECRET_KEYWORD = 'mummy';  // This should be secure and stored appropriately
+const apiUrl = process.env.REACT_APP_BACKEND_API_URL;
 
 const ErrorFallback = ({ error, resetErrorBoundary }) => (
     <div role="alert">
@@ -13,150 +19,141 @@ const ErrorFallback = ({ error, resetErrorBoundary }) => (
     </div>
 );
 
-const Popup = ({ onClose }) => (
-    <div className="popup">
-        <div className="popup-content">
-            <button onClick={onClose} className="close-btn">&times;</button>
-            <p>This is a confidential website. Do not visit without authorized access or else you will be blocked permanently.</p>
+const Popup = ({ onClose, onSubmitKeyword }) => {
+    const [keyword, setKeyword] = useState('');
+
+    const checkKeyword = () => {
+        if (keyword === SECRET_KEYWORD) {
+            onSubmitKeyword(true);
+        } else {
+            alert('Incorrect keyword.');
+            setKeyword('');
+        }
+    };
+
+    return (
+        <div className="popup">
+            <div className="popup-content">
+                <h2>Enter Secret Keyword to Access Logs</h2>
+                <input
+                    type="text"
+                    value={keyword}
+                    onChange={(e) => setKeyword(e.target.value)}
+                    placeholder="Enter keyword"
+                />
+                <button onClick={checkKeyword}>Submit</button>
+                <button onClick={onClose} className="close-btn">&times;</button>
+            </div>
         </div>
-    </div>
-);
+    );
+};
 
 const Logs = () => {
     const [logs, setLogs] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [user, setUser] = useState(null);
-    const [loading, setLoading] = useState(false);
     const [showPopup, setShowPopup] = useState(true);
-    const [showIPLogs, setShowIPLogs] = useState(false);
-    const socket = useSocket("http://localhost:3001", user);
+    const [animationActive, setAnimationActive] = useState(true);
 
     useEffect(() => {
-        const unsubscribe = auth.onAuthStateChanged(user => {
-            setUser(user);
-            setLoading(false);
-        });
-        return unsubscribe;
+        const checkAuthorization = async () => {
+            auth.onAuthStateChanged(user => {
+                if (user) {
+                    if (user.email === AUTHORIZED_EMAIL) {
+                        setUser(user);
+                    } else {
+                        alert('Unauthorized access detected.');
+                        setUser(null);
+                    }
+                } else {
+                    setUser(null);
+                }
+                setLoading(false);
+            });
+        };
+    
+        checkAuthorization();
     }, []);
 
     useEffect(() => {
-        // Fetch historical logs from the backend
         const fetchLogs = async () => {
-            setLoading(true);
             try {
-                const response = await axios.get('http://localhost:3001/api/logs');
-                const fetchedLogs = response.data.map(log => parseLog(log));
-                setLogs(fetchedLogs);
+                const response = await axios.get(`${apiUrl}/api/logs`);
+                setLogs(response.data.map(log => ({
+                    ip: log.ip || 'N/A',
+                    location: log.location || 'N/A',
+                    isp: log.isp || 'N/A',
+                    postalCode: log.postalCode || 'N/A',
+                    mapLink: log.mapLink || 'N/A'
+                })).slice(0, 50));
             } catch (error) {
                 console.error("Failed to fetch log history:", error);
-            }
-            setLoading(false);
-        };
-
-        fetchLogs();
-
-        if (socket) {
-            socket.on('httpLog', log => {
-                const parsedLog = parseLog(log);
-                setLogs(prevLogs => [...prevLogs, parsedLog]);
-            });
-        }
-    
-        // Clean up on unmount
-        return () => {
-            if (socket) {
-                socket.off('httpLog');
+            } finally {
+                setLoading(false);
             }
         };
-    }, [socket]);
 
-    const parseLog = (log) => {
-        // Assume log might be a string formatted as "IP: ..., Location: ..., ISP: ..., Postal Code: ..., Map: ..."
-        if (typeof log === 'string') {
-            // Extract IP and Location from a standard log string
-            const ipMatch = log.match(/IP: ([\d.]+)/);
-            const locationMatch = log.match(/Location: ([\w\s,]+)/);
-            const ispMatch = log.match(/ISP: ([\w\s,]+)/);
-            const postalMatch = log.match(/Postal Code: ([\w\s,]+)/);
-            const mapMatch = log.match(/Map: ([\w\s,:\/\.\?=]+)/);
-    
-            return {
-                message: `Log from IP: ${ipMatch ? ipMatch[1] : 'N/A'}`,
-                ip: ipMatch ? ipMatch[1] : 'N/A',
-                location: locationMatch ? locationMatch[1] : 'N/A',
-                isp: ispMatch ? ispMatch[1] : 'N/A',
-                postalCode: postalMatch ? postalMatch[1] : 'N/A',
-                mapLink: mapMatch ? mapMatch[1] : 'N/A'
-            };
-        } else if (typeof log === 'object') {
-            // If the log is already an object, directly format it
-            return {
-                message: log.message || 'Log entry',
-                ip: log.ip || 'N/A',
-                location: log.location || 'N/A',
-                isp: log.isp || 'N/A',
-                postalCode: log.postalCode || 'N/A',
-                mapLink: log.mapLink || 'N/A'
-            };
-        } else {
-            // Handle unexpected log types
-            console.error("Unexpected log type:", typeof log);
-            return {
-                message: 'Unexpected log format',
-                ip: 'N/A',
-                location: 'N/A',
-                isp: 'N/A',
-                postalCode: 'N/A',
-                mapLink: 'N/A'
-            };
+        if (!animationActive) {
+            fetchLogs();
         }
-    };   
+    }, [animationActive]);
 
     const handleLogin = async () => {
-        setLoading(true);
         try {
             await signInWithPopup(auth, new GoogleAuthProvider());
         } catch (error) {
             console.error("Authentication failed:", error);
+        } finally {
+            setLoading(false);
         }
     };
 
     const handleLogout = async () => {
-        setLoading(true);
         try {
             await signOut(auth);
-        } catch (error) {
-            console.error("Sign out failed:", error);
+        } finally {
+            setLoading(false);
         }
     };
 
-    const handleClosePopup = () => setShowPopup(false);
-
-    const toggleIPLogs = () => {
-        setShowIPLogs(!showIPLogs);
+    const handleKeywordSubmit = (isValid) => {
+        if (isValid) {
+            setAnimationActive(false);
+            setShowPopup(false);
+        }
     };
 
-    const filteredLogs = showIPLogs ? logs.filter(log => log.ip !== 'N/A' && log.location !== 'N/A') : logs;
+    if (loading) {
+        return <div>Loading...</div>;
+    }
 
     return (
         <ErrorBoundary FallbackComponent={ErrorFallback}>
             <div className="logs-container">
-                {showPopup && <Popup onClose={handleClosePopup} />}
+                {animationActive && (
+                    <video autoPlay loop muted style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%' }}>
+                        <source src={animationVideo} type="video/webm" />
+                    </video>
+                )}
+                {showPopup && <Popup onClose={() => setShowPopup(false)} onSubmitKeyword={handleKeywordSubmit} />}
                 {user ? (
                     <>
-                        <button onClick={handleLogout} disabled={loading}>Sign Out</button>
-                        <button onClick={toggleIPLogs}>
-                            {showIPLogs ? 'Show All Logs' : 'Show Only IP/Location Logs'}
-                        </button>
+                        <button onClick={handleLogout}>Sign Out</button>
+                        <CSVLink data={logs} filename="logs.csv" className="btn">
+                            Download Logs
+                        </CSVLink>
+                        <MapVisualization logs={logs} />
                         <div className="logs">
-                            {filteredLogs.map((log, index) => (
-                                <p key={index} className="log">
-                                IP: {log.ip}, Location: {log.location}, ISP: {log.isp}, Postal Code: {log.postalCode}, Map: <a href={log.mapLink} target="_blank" rel="noopener noreferrer">Google Maps</a>
+                            {logs.map((log, index) => (
+                                <p key={index}>
+                                    IP: {log.ip}, Location: {log.location}, ISP: {log.isp}, Postal Code: {log.postalCode},
+                                    Map: <a href={log.mapLink} target="_blank" rel="noopener noreferrer">Google Maps</a>
                                 </p>
                             ))}
                         </div>
                     </>
                 ) : (
-                    <button onClick={handleLogin} disabled={loading}>Sign In with Google</button>
+                    <button onClick={handleLogin}>Sign In with Google</button>
                 )}
             </div>
         </ErrorBoundary>

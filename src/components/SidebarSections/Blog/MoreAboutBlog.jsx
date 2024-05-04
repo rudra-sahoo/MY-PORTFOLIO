@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef} from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './MoreAboutBlog.css';
 import { auth, GoogleAuthProvider, signInWithPopup, signOut } from './firebase-config';
 import { ReactComponent as LoadingAnimation } from '../../../Resources/icons/Loading.svg';
+import LoadingVideo from '../../../Resources/Loading_Animation.webm';
 
 const apiUrl = process.env.REACT_APP_BACKEND_API_URL;
 const myEmail = process.env.REACT_APP_MASTER_EMAIL;
@@ -21,13 +22,14 @@ const MoreAboutBlog = () => {
     const [isDeleting, setIsDeleting] = useState(false);
     const [deletingId, setDeletingId] = useState(null); 
     const [authLoading, setAuthLoading] = useState(true);
+    const [contentLoading, setContentLoading] = useState(true);
+    const [videoFinished, setVideoFinished] = useState(false);
 
     const fetchUserData = useCallback(async (googleId) => {
         try {
             const response = await axios.get(`${apiUrl}/api/user/${googleId}`);
             if (response.data) {
                 setUser(response.data);
-                console.log("User data after fetching:", response.data);
             } else {
                 throw new Error("No user data received");
             }
@@ -37,8 +39,28 @@ const MoreAboutBlog = () => {
         }
     }, []);
     
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            if (videoRef.current) {
+                videoRef.current.play();
+            }
+        }, );  // Delay the video play to simulate longer load, or wait for data
+        return () => clearTimeout(timer);
+    }, []);
 
-   useEffect(() => {
+    useEffect(() => {
+        if (!authLoading && !loading && videoFinished) {
+            setContentLoading(false);
+        } else {
+            setContentLoading(true);  // Ensure it's set to true initially or when loading/auth state changes
+        }
+    }, [authLoading, loading, videoFinished]);
+
+    const handleVideoEnd = () => {
+        setVideoFinished(true);
+    };
+    
+    useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged(async (user) => {
             if (user) {
                 setUser(user);
@@ -138,7 +160,7 @@ const MoreAboutBlog = () => {
                     'Content-Type': 'application/json'
                 }
             });
-    
+
         } catch (error) {
             console.error('Error during Google SignIn:', error);
             setError('Failed to sign in with Google');
@@ -180,8 +202,26 @@ const MoreAboutBlog = () => {
             setSubmittingBlog(false);  // Stop submitting, hide loading icon
         }
     };
+    const videoRef = useRef(null);
 
-    if (loading || authLoading) return <div>Loading...</div>;  // Show loading while fetching blogs or checking auth state
+
+
+    if (contentLoading) {
+        return (
+            <div className="loading-container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+                <video 
+                    ref={videoRef} 
+                    width="40%" 
+                    muted 
+                    onEnded={handleVideoEnd}
+                    style={{ maxWidth: '500px', maxHeight: '300px' }}
+                >
+                    <source src={LoadingVideo} type="video/webm" />
+                </video>
+            </div>
+        );
+    }
+    if (loading || authLoading) return <div>Loading...</div>;
     if (error) return <div className="error">{error}</div>;
     
     return (
