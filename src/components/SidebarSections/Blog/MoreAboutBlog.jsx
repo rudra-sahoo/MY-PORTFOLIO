@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './MoreAboutBlog.css';
@@ -21,20 +21,37 @@ const MoreAboutBlog = () => {
     const [isDeleting, setIsDeleting] = useState(false);
     const [deletingId, setDeletingId] = useState(null); 
     const [authLoading, setAuthLoading] = useState(true);
-    useEffect(() => {
-        const unsubscribe = auth.onAuthStateChanged(user => {
+
+    const fetchUserData = useCallback(async (googleId) => {
+        try {
+            const response = await axios.get(`${apiUrl}/api/user/${googleId}`);
+            if (response.data) {
+                setUser(response.data);
+                console.log("User data after fetching:", response.data);
+            } else {
+                throw new Error("No user data received");
+            }
+        } catch (error) {
+            console.error('Error fetching user data:', error);
+            setError('Failed to load user data');
+        }
+    }, []);
+    
+
+   useEffect(() => {
+        const unsubscribe = auth.onAuthStateChanged(async (user) => {
             if (user) {
                 setUser(user);
                 setIsAuthenticated(true);
+                await fetchUserData(user.uid);
             } else {
                 setUser(null);
                 setIsAuthenticated(false);
             }
             setAuthLoading(false);
         });
-
-        return () => unsubscribe();  // Cleanup subscription
-    }, []);
+        return () => unsubscribe();
+    }, [fetchUserData]);
 
     useEffect(() => {
         fetchBlogs();
@@ -55,18 +72,6 @@ const MoreAboutBlog = () => {
             setError(error.message || 'Unable to fetch blogs');
         } finally {
             setLoading(false);
-        }
-    };
-    
-
-    const signInWithGoogle = async () => {
-        try {
-            const result = await signInWithPopup(auth, new GoogleAuthProvider());
-            setUser(result.user);
-            setIsAuthenticated(true);
-        } catch (error) {
-            console.error('Error during Google SignIn:', error);
-            setError('Failed to sign in with Google');
         }
     };
 
@@ -114,6 +119,33 @@ const MoreAboutBlog = () => {
         setNewBlog(prev => ({ ...prev, [name]: value }));
     };
 
+    const signInWithGoogle = async () => {
+        try {
+            const result = await signInWithPopup(auth, new GoogleAuthProvider());
+            setUser(result.user);  // This sets the initial user data from Google Auth
+            setIsAuthenticated(true);
+            
+            // Save user data to MongoDB via backend or update if already exists
+            const userData = {
+                googleId: result.user.uid,
+                displayName: result.user.displayName,
+                email: result.user.email,
+                imageUrl: result.user.photoURL
+            };
+    
+            await axios.post(`${apiUrl}/api/saveUser`, userData, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+    
+        } catch (error) {
+            console.error('Error during Google SignIn:', error);
+            setError('Failed to sign in with Google');
+        }
+    };
+    
+    
     const submitBlog = async () => {
         if (!isAuthenticated || user.email !== myEmail) {
             setError('Unauthorized attempt to submit a blog.');
@@ -158,7 +190,7 @@ const MoreAboutBlog = () => {
             {blogs.length > 0 ? blogs.map((blog, index) => (
                 <div key={index} className="blog-item" onClick={() => navigate(`/blogs/${blog.id}`)} style={{ cursor: 'pointer' }}>
                     <h2>{blog.title}</h2>
-                    <img src={blog.thumbnailData ? blog.thumbnailData : 'default-thumbnail.png'} alt={blog.title} />
+                    <img src={blog.thumbnailData || 'default-thumbnail.png'} alt={blog.title} />
                     {isAuthenticated && user.email === myEmail && (
                         <button 
                             onClick={(e) => { 
@@ -174,26 +206,33 @@ const MoreAboutBlog = () => {
                     )}
                 </div>
             )) : <p>No blogs available.</p>}
-            {isAuthenticated ? (
+    
+            {isAuthenticated && user.email === myEmail && (
                 <div>
-                    {user.email === myEmail && (
-                        <>
-                            <h2>Add a New Blog</h2>
-                            <input type="text" placeholder="Title" name="title" value={newBlog.title} onChange={handleInputChange} />
-                            <input type="text" placeholder="Author Name" name="author" value={newBlog.author} onChange={handleInputChange} />
-                            <input type="file" onChange={handleThumbnailChange} />
-                            <textarea placeholder="Blog content" name="content" value={newBlog.content} onChange={handleInputChange} />
-                            <button onClick={submitBlog} disabled={submittingBlog}>
-                                {submittingBlog ? <LoadingAnimation className="loading-icon" /> : "Submit Blog"}
-                            </button>
-                        </>
-                    )}
-                    <button onClick={handleSignOut}>Sign out</button>
+                    <h2>Add a New Blog</h2>
+                    <input type="text" placeholder="Title" name="title" value={newBlog.title} onChange={handleInputChange} />
+                    <input type="text" placeholder="Author Name" name="author" value={newBlog.author} onChange={handleInputChange} />
+                    <input type="file" onChange={handleThumbnailChange} />
+                    <textarea placeholder="Blog content" name="content" value={newBlog.content} onChange={handleInputChange} />
+                    <button onClick={submitBlog} disabled={submittingBlog}>
+                        {submittingBlog ? <LoadingAnimation className="loading-icon" /> : "Submit Blog"}
+                    </button>
+                </div>
+            )}
+    
+            {/* Authentication and User Interaction */}
+            {isAuthenticated && user ? (
+                <div style={{ display: 'flex', alignItems: 'center', marginTop: '20px'}}>
+                    <img src={user.imageUrl || 'default-user-image.png'} alt="Profile" style={{
+                        width: '50px', height: '50px', borderRadius: '50%', marginRight: '10px'
+                    }} />
+                    <h2>Welcome, {user.displayName}</h2>
+                    <button onClick={handleSignOut} style={{marginLeft: 'auto' }}>Sign out</button>
                 </div>
             ) : (
-                <button onClick={signInWithGoogle}>Sign in with Google</button>
+                <button onClick={signInWithGoogle} style={{ marginTop:'20px'}}>Sign in with Google</button>
             )}
         </div>
-    );    
-}    
+    );
+}
 export default MoreAboutBlog;

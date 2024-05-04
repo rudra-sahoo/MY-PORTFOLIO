@@ -9,9 +9,50 @@ const cron = require('node-cron');
 const morgan = require('morgan');
 const session = require('express-session');
 const multer = require('multer');
+const axios = require('axios');
 const fsp = require('fs').promises; 
 const fs = require('fs');
+const path = require('path');
+const rfs = require('rotating-file-stream');
+const http = require('http');
+const { Server } = require("socket.io");
 const app = express();
+const server = http.createServer(app);
+const accessLogStream = rfs.createStream('access.log', {
+    interval: '1d', // rotate daily
+    path: path.join(__dirname, 'log')
+  });
+const io = new Server(server, {
+    cors: {
+        origin: "http://localhost:3000", // Allow your front-end origin
+        methods: ["GET", "POST"], // Allowed request methods
+        allowedHeaders: ["Content-Type"], // Allowed headers
+        credentials: true // Allow credentials
+    }
+});
+io.on('connection', (socket) => {
+    console.log('A user connected');
+
+    // Path to the latest log file
+    const latestLogFile = path.join(__dirname, 'log', 'access.log');
+
+    // Create a read stream for the latest log file
+    const logStream = fs.createReadStream(latestLogFile, 'utf8');
+
+    logStream.on('data', function(chunk) {
+        // Emit log data in manageable chunks
+        socket.emit('httpLog', chunk);
+    });
+
+    logStream.on('error', function(err) {
+        console.error('Stream error in logStream', err);
+    });
+
+    socket.on('disconnect', () => {
+        console.log('User disconnected');
+        logStream.close();
+    });
+});
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI)
 const db = mongoose.connection;
@@ -19,6 +60,7 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 db.once('open', () => {
     console.log("Connected successfully to MongoDB");
 });
+
 // Define MongoDB Schema
 const projectSchema = new mongoose.Schema({
     name: String,
@@ -29,15 +71,6 @@ const projectSchema = new mongoose.Schema({
 });
 
 const Project = mongoose.model('Project', projectSchema);
-
-// Define User Schema for user visited count and time spent
-const userSchema = new mongoose.Schema({
-    ipAddress: String,
-    visitedCount: { type: Number, default: 1 },
-    totalTimeSpent: { type: Number, default: 0 } // in seconds
-});
-
-const User = mongoose.model('User', userSchema);
 
 const googleUserSchema = new mongoose.Schema({
     googleId: { type: String, required: true, unique: true },
@@ -80,28 +113,81 @@ const storage = multer.diskStorage({
     }
 });
 const upload = multer({ storage: storage });
+const ipInfoMiddleware = async (req, res, next) => {
+    // Check if the IP information is already stored in the session
+    if (!req.session.ipInfo) {
+        const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress.split(",")[0];
+        try {
+            const response = await axios.get(`https://ipinfo.io/${ip}/json?token=${process.env.IPINFO_TOKEN}`);
+            req.session.ipInfo = response.data;
 
+            // Prepare detailed log information
+            const detailedLogInfo = {
+                ip: ip,
+                city: response.data.city,
+                region: response.data.region,
+                country: response.data.country,
+                org: response.data.org, // ISP details
+                postal: response.data.postal,
+                locationLink: `https://www.google.com/maps/?q=${response.data.loc}` // Google Maps link
+            };
+
+            // Log the IP information to the console
+            console.log(`IP: ${ip}, Location: ${detailedLogInfo.city}, ${detailedLogInfo.region}, ${detailedLogInfo.country}, ISP: ${detailedLogInfo.org}, Postal Code: ${detailedLogInfo.postal}, Map: ${detailedLogInfo.locationLink}`);
+
+            // Emit the log entry via socket here
+            io.emit('httpLog', detailedLogInfo);
+        } catch (error) {
+            console.error('Error fetching IP information:', error);
+        }
+    } else {
+        console.log(`Session already has IP info for IP: ${req.session.ipInfo.ip}`);
+    }
+    next();
+};
+app.use(express.static('public'));  // Assuming your favicon.ico is in the 'public' directory
+app.use(cors({
+    origin: 'http://localhost:3000', // Specify the client origin explicitly
+    methods: ['GET', 'POST', 'DELETE'], // Allowed methods
+    allowedHeaders: ['Content-Type', 'Authorization'], // Explicitly allowed headers
+    credentials: true // Allow cookies/token to be sent with requests
+}));
 // Middleware
+app.use('/uploads', express.static('uploads'));
 app.use((req, res, next) => {
     res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
     next();
 });
-app.use('/uploads', express.static('uploads'));
-app.use(cors({
-    origin: process.env.FRONTEND_ORIGIN,
-    methods: ['GET', 'POST', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true
-}));
 app.use(bodyParser.json());
-app.use(morgan('dev'));  // Logging HTTP requests
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false } // Adjust this based on your deployment environment
+    cookie: { 
+        secure: false, // use true if you're on HTTPS
+        maxAge: 1000 * 60 * 15 // session will expire in 15 minutes
+    }
 }));
+app.use(ipInfoMiddleware);
+app.use(morgan('combined', { stream: accessLogStream }));
 app.use(express.json());
+
+app.get('/api/logs', async (req, res) => {
+    const logFilePath = path.join(__dirname, 'log', 'access.log');
+
+    fs.readFile(logFilePath, 'utf8', (err, data) => {
+        if (err) {
+            console.error('Error reading log file:', err);
+            return res.status(500).send('Failed to read log file');
+        }
+        
+        // Optional: Process the data if necessary or split into entries
+        const logEntries = data.split('\n').filter(entry => entry.trim() !== '');
+        
+        res.json(logEntries);
+    });
+});
+
 // Function to fetch languages from GitHub API
 async function fetchLanguages(githubUrl) {
     const apiUrl = `https://api.github.com/repos/${githubUrl.split('github.com/')[1]}/languages`;
@@ -115,6 +201,44 @@ async function fetchLanguages(githubUrl) {
         Object.entries(data).map(([language, bytes]) => [language, ((bytes / totalBytes) * 100).toFixed(2)])
     );
 }
+app.post('/api/saveUser', async (req, res) => {
+    const { googleId, displayName, email, imageUrl } = req.body;
+    try {
+        // Check if user already exists
+        const existingUser = await GoogleUser.findOne({ googleId });
+        if (existingUser) {
+            res.status(200).send('User already exists.');
+        } else {
+            // Create a new user if not exist
+            const newUser = new GoogleUser({ googleId, displayName, email, imageUrl });
+            await newUser.save();
+            res.status(201).send('User saved to MongoDB.');
+        }
+    } catch (error) {
+        console.error('Failed to save user:', error);
+        res.status(500).send('Server error');
+    }
+});
+app.get('/api/user/:id', async (req, res) => {
+    const googleId = req.params.id; // Get the Google ID from the URL parameter
+    try {
+        // Find the user in the database by Google ID
+        const user = await GoogleUser.findOne({ googleId: googleId });
+
+        if (user) {
+            // If a user is found, send back the user data
+            res.status(200).json(user);
+        } else {
+            // If no user is found, return a 404 not found
+            res.status(404).send('User not found');
+        }
+    } catch (error) {
+        // Log the error to the console
+        console.error('Failed to retrieve user:', error);
+        // Respond with a 500 internal server error status
+        res.status(500).send('Server error');
+    }
+});
 // Get projects from MongoDB
 app.get('/api/projects', async (req, res) => {
     try {
@@ -125,8 +249,6 @@ app.get('/api/projects', async (req, res) => {
         res.status(500).send({ success: false, message: 'Failed to fetch projects' });
     }
 });
-// Middleware to authenticate token
-
 // Store project data in MongoDB
 app.post('/api/projects', async (req, res) => {
     const { name, description, githubUrl } = req.body;
@@ -429,6 +551,6 @@ app.get('/', (req, res) => {
     res.send('Welcome to my server!');
 });
 const port = process.env.B_PORT || 3001;
-app.listen(port, () => {
+server.listen(port, () => {
     console.log(`Server running on port ${port}`);
 });

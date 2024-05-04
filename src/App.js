@@ -13,6 +13,7 @@ import BlogDetails from './components/SidebarSections/Blog/BlogDetails';
 import MoreAboutProject from './components/SidebarSections/Project/MoreAboutProject';
 import ContactPage from './components/SidebarSections/Contact-Page/ContactPage';
 import Profile from './components/SidebarSections/Profile/Profile';
+import Logs from './components/SidebarSections/LOGS/logs'; 
 import './App.css';
 
 const AppWrapper = () => {
@@ -83,10 +84,8 @@ const App = () => {
                             <Route path="/project" element={<MoreAboutProject />} />
                             <Route path="/blogs" element={<MoreAboutBlog />} />
                             <Route path="/blogs/:id" element={<BlogDetails />} />
+                            <Route path="/logs" element={<Logs />} /> 
                         </Routes>
-                        <div className="footer">
-                            CRAFTED WITH LOVE BY RUDRA
-                        </div>
                     </div>
                 </>
             )}

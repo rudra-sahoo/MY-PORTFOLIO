@@ -86,7 +86,7 @@
         border-width: 2px;
     }
     .blog-card:hover {
-        transform: translate(-50%, 103%); /* Reset transform to non-hover state */
+        transform: translate(-50%, 107%); /* Reset transform to non-hover state */
         box-shadow: 0 4px 8px rgba(0,0,0,0.5);  /* Reset shadow to non-hover state */
     }
 
