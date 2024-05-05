@@ -14,7 +14,6 @@ const Blog = () => {
         // Check if the data has already been fetched
         if (!hasFetched.current) {
             hasFetched.current = true;  // Set this to true to prevent future fetches
-            console.log("component mounted and fetching data.");
             const fetchLatestBlog = async () => {
                 try {
                     const apiUrl = process.env.REACT_APP_BACKEND_API_URL;

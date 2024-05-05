@@ -79,14 +79,14 @@
         position: absolute;
         top: 50%;  /* Vertically center in the original viewport height */
         left: 50%;  /* Horizontally center */
-        transform: translate(-50%,107%);  /* Center the card exactly, adjusted for mobile */
+        transform: translate(-50%,90%);  /* Center the card exactly, adjusted for mobile */
         width: 305px;
         min-width: 318px;  /* Maintain fixed minimum width */
         padding: 20px;
         border-width: 2px;
     }
     .blog-card:hover {
-        transform: translate(-50%, 107%); /* Reset transform to non-hover state */
+        transform: translate(-50%, 90%); /* Reset transform to non-hover state */
         box-shadow: 0 4px 8px rgba(0,0,0,0.5);  /* Reset shadow to non-hover state */
     }
 

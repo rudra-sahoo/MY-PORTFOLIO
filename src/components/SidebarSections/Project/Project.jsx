@@ -13,7 +13,6 @@ const Project = () => {
         // Only perform the fetch if it has not been done yet
         if (!hasFetched.current) {
             hasFetched.current = true;  // Set this to true to prevent future fetches
-            console.log('Project component mounted and fetching data.')
             const fetchProjects = async () => {
                 try {
                     const response = await fetch(`${process.env.REACT_APP_BACKEND_API_URL}/api/projects`);
